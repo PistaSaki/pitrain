@@ -9,8 +9,8 @@ class BruteForceOptimization:
     @staticmethod
     def from_scratch(f, x, name = "brute_force_optimization"):
         with tf.name_scope(name):
-            min_f = tf.Variable(f)
-            argmin_f = tf.Variable(x)
+            min_f = tf.Variable(f, validate_shape = False)
+            argmin_f = tf.Variable(x, validate_shape = False)
             
             condition = tf.Variable(tf.ones_like(f, dtype = bool), name = "condition", dtype = tf.bool, validate_shape=False)
             condition.set_shape([None])    
