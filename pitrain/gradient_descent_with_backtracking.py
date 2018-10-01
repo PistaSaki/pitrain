@@ -5,16 +5,16 @@ class GragientDescentWithBacktracking:
         self.initializer = initializer
         self.step_sequence = step_sequence
         
-    def run_initializer(self, sess = None):
+    def run_initializer(self, feed_dict = None, sess = None):
         if sess is None:
             sess = tf.get_default_session()
-        sess.run(self.initializer)
+        sess.run(self.initializer, feed_dict = feed_dict)
         
-    def run_train_step(self, sess = None):
+    def run_train_step(self, feed_dict = None, sess = None):
         if sess is None:
             sess = tf.get_default_session()
         for s in self.step_sequence:
-            sess.run(s)
+            sess.run(s, feed_dict = feed_dict)
             
     @staticmethod
     def find_in_graph(scope_prefix, graph = None):
@@ -154,6 +154,9 @@ class GragientDescentWithBacktracking:
             floatX = f.dtype
             
             # define vars we need
+            
+            ## subscript `c` stands for "current"
+            ## subscript `p` statnds for "proposal"
             
             x_c = tf.Variable(x, name = "x_c", dtype = floatX, validate_shape=False)
             x_c.set_shape([None, None])

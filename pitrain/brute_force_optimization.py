@@ -1,5 +1,7 @@
 import tensorflow as tf
 
+from .misc import concat_dics
+
 class BruteForceOptimization:
     def __init__(self, initializer, x_proposal, step_sequence):
         self.initializer = initializer
@@ -74,14 +76,17 @@ class BruteForceOptimization:
                 x_proposal = graph.get_tensor_by_name(scope_prefix + "x_proposal:0")
         )
         
-    def run_initializer(self, sess = None):
+    def run_initializer(self, feed_dict = None, sess = None):
         if sess is None:
             sess = tf.get_default_session()
-        sess.run(self.initializer)
+        sess.run(self.initializer, feed_dict = feed_dict)
         
-    def run_train_step(self, x_prop, sess = None):
+    def run_train_step(self, x_prop, feed_dict = None, sess = None):
         if sess is None:
             sess = tf.get_default_session()
+            
+        feed_dict = concat_dics(feed_dict, {self.x_proposal: x_prop})
+        
         for s in self.step_sequence:
-            sess.run(s, {self.x_proposal: x_prop})
+            sess.run(s, feed_dict = feed_dict)
     
