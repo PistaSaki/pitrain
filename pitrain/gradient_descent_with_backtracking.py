@@ -153,33 +153,38 @@ class GragientDescentWithBacktracking:
             
             floatX = f.dtype
             
+            ## the following auxilliary tensors are uset for initialization
+            x_init_val = x.initialized_value()
+            f_init_val = tf.zeros_like(x_init_val[:, 0])
+            
+            
             # define vars we need
             
             ## subscript `c` stands for "current"
             ## subscript `p` statnds for "proposal"
             
-            x_c = tf.Variable(x, name = "x_c", dtype = floatX, validate_shape=False)
+            x_c = tf.Variable(x_init_val, name = "x_c", dtype = floatX, validate_shape=False)
             x_c.set_shape([None, None])
         
-            f_c = tf.Variable(f, name = "f_c", dtype = floatX, validate_shape=False)
+            f_c = tf.Variable(f_init_val, name = "f_c", dtype = floatX, validate_shape=False)
             f_c.set_shape([None])
         
-            df_c = tf.Variable(x, name = "df_c", dtype = floatX, validate_shape=False)
+            df_c = tf.Variable(x_init_val, name = "df_c", dtype = floatX, validate_shape=False)
             df_c.set_shape([None, None])
         
-            x_p = tf.Variable(x, name = "x_p", dtype = floatX, validate_shape=False)
+            x_p = tf.Variable(x_init_val, name = "x_p", dtype = floatX, validate_shape=False)
             x_p.set_shape([None, None])
         
-            f_p = tf.Variable(f, name = "f_p", dtype = floatX, validate_shape=False)
+            f_p = tf.Variable(f_init_val, name = "f_p", dtype = floatX, validate_shape=False)
             f_p.set_shape([None])
         
-            df_p = tf.Variable(x, name = "df_p", dtype = floatX, validate_shape=False)
+            df_p = tf.Variable(x_init_val, name = "df_p", dtype = floatX, validate_shape=False)
             df_p.set_shape([None, None])
         
-            condition = tf.Variable(tf.ones_like(f, dtype = bool), name = "condition", dtype = tf.bool, validate_shape=False)
+            condition = tf.Variable(tf.ones_like(f_init_val, dtype = bool), name = "condition", dtype = tf.bool, validate_shape=False)
             condition.set_shape([None])
         
-            alpha = tf.Variable(tf.ones_like(f), name = "alpha", dtype = floatX, validate_shape=False)
+            alpha = tf.Variable(tf.ones_like(f_init_val), name = "alpha", dtype = floatX, validate_shape=False)
             alpha.set_shape([None])
         
     

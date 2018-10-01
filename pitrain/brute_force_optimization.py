@@ -11,10 +11,13 @@ class BruteForceOptimization:
     @staticmethod
     def from_scratch(f, x, name = "brute_force_optimization"):
         with tf.name_scope(name):
-            min_f = tf.Variable(f, validate_shape = False)
-            argmin_f = tf.Variable(x, validate_shape = False)
+            x_init_val = x.initialized_value()
+            f_init_val = tf.zeros_like(x_init_val[:, 0])
             
-            condition = tf.Variable(tf.ones_like(f, dtype = bool), name = "condition", dtype = tf.bool, validate_shape=False)
+            min_f = tf.Variable(f_init_val, validate_shape = False)
+            argmin_f = tf.Variable(x_init_val, validate_shape = False)
+            
+            condition = tf.Variable(tf.ones_like(f_init_val, dtype = bool), name = "condition", dtype = tf.bool, validate_shape=False)
             condition.set_shape([None])    
             
             x_proposal = tf.placeholder(dtype = x.dtype, shape = x.shape[-1:], name = "x_proposal")
