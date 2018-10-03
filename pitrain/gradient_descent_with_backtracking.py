@@ -46,6 +46,7 @@ class GragientDescentWithBacktracking:
             train_step_kwargs: dictionary            
         """
         def construct_initializer(
+            floatX,
             initial_step_length,
             minimal_grad_length = 1e-5,
         ):
@@ -77,7 +78,7 @@ class GragientDescentWithBacktracking:
                 ], 
                 tf.assign(
                     alpha,
-                    initial_step_length / tf.maximum(minimal_grad_length, tf.norm(df, axis = -1)),
+                    initial_step_length / tf.maximum(tf.cast(minimal_grad_length, floatX), tf.norm(df, axis = -1)),
                     name = "alpha_initializer", 
                     validate_shape = False
                 ),
@@ -87,7 +88,7 @@ class GragientDescentWithBacktracking:
                 name = "initializer"
             )
                 
-        def construct_step_sequence(c1 = 0.5, rho =  0.5):
+        def construct_step_sequence(floatX, c1 = 0.5, rho =  0.5):
             """
             Args:
                 c1: scalar. sufficient_descent_const
@@ -189,8 +190,8 @@ class GragientDescentWithBacktracking:
         
     
             return GragientDescentWithBacktracking(
-                initializer=construct_initializer(**initializer_kwargs),
-                step_sequence=construct_step_sequence(**train_step_kwargs)
+                initializer=construct_initializer(**initializer_kwargs, floatX = floatX),
+                step_sequence=construct_step_sequence(**train_step_kwargs, floatX = floatX)
             )
         
       
