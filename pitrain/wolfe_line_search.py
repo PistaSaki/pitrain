@@ -24,6 +24,8 @@ class Rememberer:
         
         return val
 
+class WolfeLineSearchException(Exception):
+    pass
 
 def wolfe_linear_search(
     phi, d_phi,
@@ -163,7 +165,7 @@ def wolfe_linear_search(
         ## If none of the previous happens, we must start everything with larger `a`:
         # choose new a in (a, alpha_max):
         if a == alpha_max:
-            raise Exception("We reached a == alpha_max in bracketing phase. Can't augment it any more.")
+            raise WolfeLineSearchException("We reached a == alpha_max in bracketing phase. Can't augment it any more.")
             
         a_new = bracketing_augment_method(alpha = a)
         
@@ -179,7 +181,7 @@ def wolfe_linear_search(
             update_plot([[a, phi_a], [a_prev, phi_a_prev]])
             
     else:
-        raise Exception("Too many steps in bracketing phase.")
+        raise WolfeLineSearchException("Too many steps in bracketing phase.")
         
     
 
@@ -236,7 +238,7 @@ def wolfe_linear_search(
             a_lo = a
             phi_a_lo = phi_a
     else:
-        raise Exception("Too many steps in zooming phase.")
+        raise WolfeLineSearchException("Too many steps in zooming phase.")
         
         
     if plotting:
@@ -339,13 +341,13 @@ class Wolfe_Line_Search:
         if all(f_remember.history.x.iloc[-1] == x_new):
             f_x_new = f_remember.history.f.iloc[-1]
         else:
-            raise Exception("I think the value of `f` at `x` should have been calkulated in Wolfe search.")
+            raise WolfeLineSearchException("I think the value of `f` at `x` should have been calkulated in Wolfe search.")
 
         ## retrieve value df_x from history or calculate it
         if all(df_remember.history.x.iloc[-1] == x_new):
             df_x_new = df_remember.history.f.iloc[-1]
         else:
-            raise Exception("I think the value of `df` at `x` should have been calkulated in Wolfe search.")
+            raise WolfeLineSearchException("I think the value of `df` at `x` should have been calkulated in Wolfe search.")
             
         ## 
         return SimpleNamespace(
