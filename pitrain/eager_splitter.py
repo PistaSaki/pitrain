@@ -13,7 +13,7 @@ class Splitter2:
     def __init__(self, tensors):
         """
         Args:
-            tensors: list of tensorflow tensors woth well defined shape.
+            tensors: list of tensorflow tensors with well defined shape.
         """
         self.tensors = tensors
         
@@ -37,32 +37,16 @@ class Splitter2:
             for t, xt in zip(self.tensors, np.split(x, split_indices))
         ]
     
-    def split_dic(self, x):
-        """Split numpy vector `x` into tensorflow feed_dict for `self.tensors`.
-        
-        Args:
-            x: numpy vector
-            
-        Returns:
-            Dictionary whose keys are `self.tensors` and values are numpy arrays containing
-            the elements from `x`.
-        """
-        return OrderedDict( 
-            zip(self.tensors, self.split(x)) 
-        )
     
     def join(self, lst):
         flattenned = [tf.reshape(x, [-1]) for x in lst]
         return tf.concat( flattenned, axis=0).numpy()
-    
-    def join_dic(self, dic):
-        return self.join([dic[t] for t in self.tensors])
     
     def current_x(self):
         """Evaluate `self.tensors` and join them into one numpy vector."""
         return self.join(self.tensors)
     
     def assign_tensors(self, x):
-        for var, val in self.split_dic(x).items():
+        for var, val in zip(self.tensors, self.split(x)):
             var.assign(val)
     
